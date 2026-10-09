@@ -18,6 +18,7 @@
       <ul class="menu">
         <li><a href="index.html" class="activo" aria-current="page">./inicio</a></li>
         <li><a href="proyectos.html">./proyectos</a></li>
+        <li><a href="servicios.html">./servicios</a></li>
         <li><a href="registro.html">./registro</a></li>
         <li><a href="login.html">./login</a></li>
         <li><a href="contacto.html">./contacto</a></li>
@@ -27,14 +28,34 @@
 
   <main>
     <section class="hero contenedor">
-      <p class="comentario">// hola mundo, soy</p>
-      <h1 class="nombre">Jonelvi Castro</h1>
-      <p class="subtitulo"><span id="escribiendo">Desarrollador Fullstack en formación</span><span class="cursor">|</span></p>
-      <p class="hero-texto">Construyo sitios web limpios, accesibles y funcionales con HTML, CSS y JavaScript.</p>
-      <div class="acciones">
-        <a href="proyectos.html" class="boton">ver_proyectos()</a>
-        <a href="contacto.html" class="boton boton-borde">contactar()</a>
+      <div class="hero-info">
+        <p class="comentario">// hola mundo, soy</p>
+        <h1 class="nombre">Jonelvi Castro</h1>
+        <p class="subtitulo"><span id="escribiendo">Desarrollador Fullstack en formación</span><span class="cursor">|</span></p>
+        <p class="hero-texto">Construyo sitios web limpios, accesibles y funcionales con HTML, CSS y JavaScript.</p>
+        <div class="acciones">
+          <a href="proyectos.html" class="boton">ver_proyectos()</a>
+          <a href="contacto.html" class="boton boton-borde">contactar()</a>
+        </div>
       </div>
+
+      <!-- Ventana de código decorativa (código ficticio, no se ejecuta) -->
+      <figure class="ventana-codigo" aria-label="Fragmento de código decorativo">
+        <figcaption class="ventana-barra"><span></span><span></span><span></span> perfil.js</figcaption>
+<pre><code><span class="c-com">// perfil.js — v2.6.0</span>
+<span class="c-kw">import</span> { Desarrollador } <span class="c-kw">from</span> <span class="c-str">"@duoc/fullstack"</span>;
+
+<span class="c-kw">const</span> <span class="c-var">jonelvi</span> = <span class="c-kw">new</span> <span class="c-fn">Desarrollador</span>({
+  rol: <span class="c-str">"Fullstack Developer"</span>,
+  stack: [<span class="c-str">"HTML"</span>, <span class="c-str">"CSS"</span>, <span class="c-str">"JavaScript"</span>],
+  idSocio: <span class="c-str">"JC-7K4M-2Q9X"</span>,
+  commits: <span class="c-num">1024</span>,
+  cafe: <span class="c-kw">true</span>,
+});
+
+<span class="c-var">jonelvi</span>.<span class="c-fn">desplegar</span>(<span class="c-str">"portafolio"</span>);
+<span class="c-com">// ✓ build 3f9a2c1 listo en 1.2s</span></code></pre>
+      </figure>
     </section>
 
     <section class="contenedor" id="sobre-mi">
@@ -70,7 +91,7 @@
   <footer class="pie">
     <p><span class="acento">$</span> echo "© 2026 Jonelvi Castro — Desarrollador Fullstack"</p>
     <p>Santiago, Chile · <a href="mailto:tu.correo@duocuc.cl">tu.correo@duocuc.cl</a> · <a href="https://github.com/TU_USUARIO" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></p>
-    <p class="pie-links"><a href="index.html">inicio</a> · <a href="proyectos.html">proyectos</a> · <a href="registro.html">registro</a> · <a href="login.html">login</a> · <a href="contacto.html">contacto</a></p>
+    <p class="pie-links"><a href="index.html">inicio</a> · <a href="proyectos.html">proyectos</a> · <a href="servicios.html">servicios</a> · <a href="registro.html">registro</a> · <a href="login.html">login</a> · <a href="contacto.html">contacto</a></p>
   </footer>
 
   <script src="js/animaciones.js"></script>
