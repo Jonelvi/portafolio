@@ -1,29 +1,19 @@
 // =========================================
 // Portafolio - Validaciones de formularios
 // Se usa en registro.html, login.html y contacto.html
+//
+// PARTE 1: funciones puras (reciben un texto y devuelven true/false
+//          o un mensaje). Son las que se prueban con Jasmine en /tests.
+// PARTE 2: conexión con los formularios (eventos, mensajes en pantalla).
 // =========================================
 
-// ---------- Funciones de ayuda ----------
-
-// Muestra un mensaje de error bajo el campo y lo marca en rojo
-function mostrarError(input, idError, mensaje) {
-  document.getElementById(idError).textContent = mensaje;
-  input.classList.add("invalido");
-  input.classList.remove("valido");
-}
-
-// Limpia el error y marca el campo en verde
-function limpiarError(input, idError) {
-  document.getElementById(idError).textContent = "";
-  input.classList.remove("invalido");
-  input.classList.add("valido");
-}
+// ---------- PARTE 1: reglas de validación ----------
 
 function esCorreoValido(correo) {
   return /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(correo);
 }
 
-// Valida el RUT chileno con el algoritmo de módulo 11 (dígito verificador)
+// RUT chileno: formato 12345678-5 y dígito verificador (módulo 11)
 function esRutValido(rut) {
   if (!/^\d{7,8}-[\dkK]$/.test(rut)) return false;
   const [cuerpo, dv] = rut.split("-");
@@ -38,160 +28,169 @@ function esRutValido(rut) {
   return dv.toUpperCase() === dvEsperado;
 }
 
-// =========================================
-// FORMULARIO DE REGISTRO
-// =========================================
-const formRegistro = document.getElementById("form-registro");
+// Cada función devuelve "" si está bien, o el mensaje de error
+function validarNombre(valor) {
+  const v = valor.trim();
+  if (v === "") return "El nombre es obligatorio.";
+  if (v.length < 3) return "El nombre debe tener al menos 3 caracteres.";
+  if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(v)) return "El nombre solo puede contener letras y espacios.";
+  return "";
+}
+
+function validarRut(valor) {
+  const v = valor.trim();
+  if (v === "") return "El RUT es obligatorio.";
+  if (!/^\d{7,8}-[\dkK]$/.test(v)) return "Formato incorrecto. Usa 12345678-5 (sin puntos, con guion).";
+  if (!esRutValido(v)) return "El dígito verificador no corresponde. Revisa tu RUT.";
+  return "";
+}
+
+function validarCorreo(valor) {
+  const v = valor.trim();
+  if (v === "") return "El correo es obligatorio.";
+  if (!esCorreoValido(v)) return "Ingresa un correo válido, por ejemplo: nombre@duocuc.cl";
+  return "";
+}
+
+function validarTelefono(valor) {
+  const v = valor.replace(/\s/g, "");
+  if (v === "") return ""; // es opcional
+  if (!/^(\+?56)?9\d{8}$/.test(v)) return "Teléfono inválido. Ej: +56912345678";
+  return "";
+}
+
+function validarRegion(valor, regionesValidas) {
+  const v = valor.trim();
+  if (v === "") return "Selecciona tu región.";
+  if (!regionesValidas.includes(v)) return "Elige una región de la lista de sugerencias.";
+  return "";
+}
+
+function validarClave(valor) {
+  if (valor === "") return "La contraseña es obligatoria.";
+  if (valor.length < 8 || valor.length > 16) return "Debe tener entre 8 y 16 caracteres.";
+  if (!/[A-Z]/.test(valor)) return "Debe incluir al menos una letra mayúscula.";
+  if (!/\d/.test(valor)) return "Debe incluir al menos un número.";
+  return "";
+}
+
+function validarConfirmacion(clave, confirmacion) {
+  if (confirmacion === "") return "Confirma tu contraseña.";
+  if (clave !== confirmacion) return "Las contraseñas no coinciden.";
+  return "";
+}
+
+function validarMensaje(valor) {
+  if (valor.trim().length < 10) return "El mensaje debe tener al menos 10 caracteres.";
+  return "";
+}
+
+// ---------- PARTE 2: conexión con la página ----------
+
+// Muestra (o limpia) el error de un campo. Devuelve true si el campo está bien.
+function aplicarResultado(input, idError, mensaje) {
+  document.getElementById(idError).textContent = mensaje;
+  input.classList.toggle("invalido", mensaje !== "");
+  input.classList.toggle("valido", mensaje === "");
+  if (mensaje !== "") {
+    // pequeña sacudida para llamar la atención
+    input.classList.remove("sacudir");
+    void input.offsetWidth;
+    input.classList.add("sacudir");
+  }
+  return mensaje === "";
+}
+
+function limpiarEstados(form) {
+  form.querySelectorAll(".error").forEach(el => (el.textContent = ""));
+  form.querySelectorAll(".invalido, .valido").forEach(el => el.classList.remove("invalido", "valido"));
+}
+
+// En Node (pruebas) no existe "document"; así el archivo no se rompe
+const hayPagina = typeof document !== "undefined";
+
+function celebrar() {
+  if (typeof lanzarConfeti === "function") lanzarConfeti();
+}
+
+// ===== REGISTRO =====
+const formRegistro = hayPagina ? document.getElementById("form-registro") : null;
 
 if (formRegistro) {
-  const nombre = document.getElementById("nombre");
-  const rut = document.getElementById("rut");
-  const correo = document.getElementById("correo");
-  const telefono = document.getElementById("telefono");
-  const region = document.getElementById("region");
-  const clave = document.getElementById("clave");
-  const clave2 = document.getElementById("clave2");
-  const terminos = document.getElementById("terminos");
+  const $ = id => document.getElementById(id);
+  const regiones = Array.from(document.querySelectorAll("#lista-regiones option")).map(o => o.value);
 
-  const regionesValidas = Array.from(
-    document.querySelectorAll("#lista-regiones option")
-  ).map(op => op.value);
-
-  // Cada validador devuelve true/false y muestra su propio mensaje
   const validadores = {
-    nombre() {
-      const v = nombre.value.trim();
-      if (v === "") return mostrarError(nombre, "error-nombre", "El nombre es obligatorio."), false;
-      if (v.length < 3) return mostrarError(nombre, "error-nombre", "El nombre debe tener al menos 3 caracteres."), false;
-      if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(v)) return mostrarError(nombre, "error-nombre", "El nombre solo puede contener letras y espacios."), false;
-      limpiarError(nombre, "error-nombre");
-      return true;
-    },
-    rut() {
-      const v = rut.value.trim();
-      if (v === "") return mostrarError(rut, "error-rut", "El RUT es obligatorio."), false;
-      if (!/^\d{7,8}-[\dkK]$/.test(v)) return mostrarError(rut, "error-rut", "Formato incorrecto. Usa 12345678-5 (sin puntos, con guion)."), false;
-      if (!esRutValido(v)) return mostrarError(rut, "error-rut", "El dígito verificador no corresponde. Revisa tu RUT."), false;
-      limpiarError(rut, "error-rut");
-      return true;
-    },
-    correo() {
-      const v = correo.value.trim();
-      if (v === "") return mostrarError(correo, "error-correo", "El correo es obligatorio."), false;
-      if (!esCorreoValido(v)) return mostrarError(correo, "error-correo", "Ingresa un correo válido, por ejemplo: nombre@duoc.cl"), false;
-      limpiarError(correo, "error-correo");
-      return true;
-    },
-    telefono() {
-      const v = telefono.value.trim();
-      if (v === "") { // es opcional
-        limpiarError(telefono, "error-telefono");
-        return true;
-      }
-      if (!/^\+?56?9\d{8}$/.test(v.replace(/\s/g, ""))) return mostrarError(telefono, "error-telefono", "Teléfono inválido. Ej: +56912345678"), false;
-      limpiarError(telefono, "error-telefono");
-      return true;
-    },
-    region() {
-      const v = region.value.trim();
-      if (v === "") return mostrarError(region, "error-region", "Selecciona tu región."), false;
-      if (!regionesValidas.includes(v)) return mostrarError(region, "error-region", "Elige una región de la lista de sugerencias."), false;
-      limpiarError(region, "error-region");
-      return true;
-    },
-    clave() {
-      const v = clave.value;
-      if (v === "") return mostrarError(clave, "error-clave", "La contraseña es obligatoria."), false;
-      if (v.length < 8 || v.length > 16) return mostrarError(clave, "error-clave", "Debe tener entre 8 y 16 caracteres."), false;
-      if (!/[A-Z]/.test(v)) return mostrarError(clave, "error-clave", "Debe incluir al menos una letra mayúscula."), false;
-      if (!/\d/.test(v)) return mostrarError(clave, "error-clave", "Debe incluir al menos un número."), false;
-      limpiarError(clave, "error-clave");
-      return true;
-    },
-    clave2() {
-      if (clave2.value === "") return mostrarError(clave2, "error-clave2", "Confirma tu contraseña."), false;
-      if (clave2.value !== clave.value) return mostrarError(clave2, "error-clave2", "Las contraseñas no coinciden."), false;
-      limpiarError(clave2, "error-clave2");
-      return true;
-    },
-    terminos() {
-      if (!terminos.checked) return mostrarError(terminos, "error-terminos", "Debes aceptar los términos y condiciones."), false;
-      limpiarError(terminos, "error-terminos");
-      return true;
-    }
+    nombre:   () => aplicarResultado($("nombre"), "error-nombre", validarNombre($("nombre").value)),
+    rut:      () => aplicarResultado($("rut"), "error-rut", validarRut($("rut").value)),
+    correo:   () => aplicarResultado($("correo"), "error-correo", validarCorreo($("correo").value)),
+    telefono: () => aplicarResultado($("telefono"), "error-telefono", validarTelefono($("telefono").value)),
+    region:   () => aplicarResultado($("region"), "error-region", validarRegion($("region").value, regiones)),
+    clave:    () => aplicarResultado($("clave"), "error-clave", validarClave($("clave").value)),
+    clave2:   () => aplicarResultado($("clave2"), "error-clave2", validarConfirmacion($("clave").value, $("clave2").value)),
+    terminos: () => aplicarResultado($("terminos"), "error-terminos",
+                     $("terminos").checked ? "" : "Debes aceptar los términos y condiciones.")
   };
 
-  // Validación en tiempo real: al salir de cada campo
-  nombre.addEventListener("blur", validadores.nombre);
-  rut.addEventListener("blur", validadores.rut);
-  correo.addEventListener("blur", validadores.correo);
-  telefono.addEventListener("blur", validadores.telefono);
-  region.addEventListener("change", validadores.region);
-  clave.addEventListener("input", validadores.clave);
-  clave2.addEventListener("input", validadores.clave2);
-  terminos.addEventListener("change", validadores.terminos);
+  // Validación en tiempo real
+  $("nombre").addEventListener("blur", validadores.nombre);
+  $("rut").addEventListener("blur", validadores.rut);
+  $("correo").addEventListener("blur", validadores.correo);
+  $("telefono").addEventListener("blur", validadores.telefono);
+  $("region").addEventListener("change", validadores.region);
+  $("clave").addEventListener("input", validadores.clave);
+  $("clave2").addEventListener("input", validadores.clave2);
+  $("terminos").addEventListener("change", validadores.terminos);
 
-  // Al enviar: se validan todos y, si hay alguno malo, se BLOQUEA el envío
-  formRegistro.addEventListener("submit", function (e) {
+  // Al enviar: si hay errores se BLOQUEA el envío
+  formRegistro.addEventListener("submit", e => {
     e.preventDefault();
-    const resultados = Object.values(validadores).map(fn => fn());
-    const todoOk = resultados.every(r => r === true);
-    const mensaje = document.getElementById("mensaje-exito");
+    const todoOk = Object.values(validadores).map(fn => fn()).every(Boolean);
+    const mensaje = $("mensaje-exito");
 
     if (todoOk) {
-      mensaje.textContent = "¡Registro exitoso! Ya eres parte de la comunidad.";
-      formRegistro.reset();
-      formRegistro.querySelectorAll(".valido").forEach(el => el.classList.remove("valido"));
+      formRegistro.reset(); // primero se limpia el formulario...
+      mensaje.textContent = "¡Registro exitoso! Ya eres parte de la comunidad."; // ...y luego se muestra el mensaje
+      celebrar();
     } else {
       mensaje.textContent = "";
-      formRegistro.querySelector(".invalido").focus(); // lleva al primer error
+      formRegistro.querySelector(".invalido").focus();
     }
   });
 
-  // Al limpiar el formulario se borran también los mensajes
-  formRegistro.addEventListener("reset", function () {
-    formRegistro.querySelectorAll(".error").forEach(el => (el.textContent = ""));
-    formRegistro.querySelectorAll(".invalido, .valido").forEach(el => el.classList.remove("invalido", "valido"));
+  formRegistro.addEventListener("reset", () => {
+    limpiarEstados(formRegistro);
+    $("mensaje-exito").textContent = "";
   });
 }
 
-// =========================================
-// FORMULARIO DE LOGIN
-// =========================================
-const formLogin = document.getElementById("form-login");
+// ===== LOGIN =====
+const formLogin = hayPagina ? document.getElementById("form-login") : null;
 
 if (formLogin) {
   const correo = document.getElementById("login-correo");
   const clave = document.getElementById("login-clave");
 
-  formLogin.addEventListener("submit", function (e) {
+  formLogin.addEventListener("submit", e => {
     e.preventDefault();
-    let ok = true;
+    const okCorreo = aplicarResultado(correo, "error-login-correo",
+      correo.value.trim() === "" ? "Ingresa tu correo." : validarCorreo(correo.value));
+    const okClave = aplicarResultado(clave, "error-login-clave",
+      clave.value === "" ? "Ingresa tu contraseña." :
+      clave.value.length < 8 ? "La contraseña tiene al menos 8 caracteres." : "");
 
-    if (correo.value.trim() === "") {
-      mostrarError(correo, "error-login-correo", "Ingresa tu correo."); ok = false;
-    } else if (!esCorreoValido(correo.value.trim())) {
-      mostrarError(correo, "error-login-correo", "El formato del correo no es válido."); ok = false;
+    const salida = document.getElementById("mensaje-login");
+    if (okCorreo && okClave) {
+      salida.textContent = "Ingreso correcto. ¡Hola de nuevo!";
+      celebrar();
     } else {
-      limpiarError(correo, "error-login-correo");
+      salida.textContent = "";
     }
-
-    if (clave.value === "") {
-      mostrarError(clave, "error-login-clave", "Ingresa tu contraseña."); ok = false;
-    } else if (clave.value.length < 8) {
-      mostrarError(clave, "error-login-clave", "La contraseña tiene al menos 8 caracteres."); ok = false;
-    } else {
-      limpiarError(clave, "error-login-clave");
-    }
-
-    document.getElementById("mensaje-login").textContent = ok ? "Ingreso correcto. ¡Hola de nuevo!" : "";
   });
 }
 
-// =========================================
-// FORMULARIO DE CONTACTO
-// =========================================
-const formContacto = document.getElementById("form-contacto");
+// ===== CONTACTO =====
+const formContacto = hayPagina ? document.getElementById("form-contacto") : null;
 
 if (formContacto) {
   const nombre = document.getElementById("contacto-nombre");
@@ -199,33 +198,33 @@ if (formContacto) {
   const mensaje = document.getElementById("contacto-mensaje");
   const contador = document.getElementById("contador");
 
-  // Contador de caracteres en vivo
   mensaje.addEventListener("input", () => (contador.textContent = mensaje.value.length));
 
-  formContacto.addEventListener("submit", function (e) {
+  formContacto.addEventListener("submit", e => {
     e.preventDefault();
-    let ok = true;
-
-    if (nombre.value.trim().length < 3) {
-      mostrarError(nombre, "error-contacto-nombre", "Ingresa tu nombre (mínimo 3 caracteres)."); ok = false;
-    } else limpiarError(nombre, "error-contacto-nombre");
-
-    if (!esCorreoValido(correo.value.trim())) {
-      mostrarError(correo, "error-contacto-correo", "Ingresa un correo válido."); ok = false;
-    } else limpiarError(correo, "error-contacto-correo");
-
-    if (mensaje.value.trim().length < 10) {
-      mostrarError(mensaje, "error-contacto-mensaje", "El mensaje debe tener al menos 10 caracteres."); ok = false;
-    } else limpiarError(mensaje, "error-contacto-mensaje");
+    const resultados = [
+      aplicarResultado(nombre, "error-contacto-nombre", validarNombre(nombre.value)),
+      aplicarResultado(correo, "error-contacto-correo", validarCorreo(correo.value)),
+      aplicarResultado(mensaje, "error-contacto-mensaje", validarMensaje(mensaje.value))
+    ];
 
     const salida = document.getElementById("mensaje-contacto");
-    if (ok) {
-      salida.textContent = "¡Mensaje enviado! Te responderemos pronto.";
+    if (resultados.every(Boolean)) {
+      salida.textContent = "¡Mensaje enviado! Te responderé pronto.";
       formContacto.reset();
       contador.textContent = "0";
-      formContacto.querySelectorAll(".valido").forEach(el => el.classList.remove("valido"));
+      limpiarEstados(formContacto);
+      celebrar();
     } else {
       salida.textContent = "";
     }
   });
+}
+
+// Permite usar estas funciones en pruebas con Node (no afecta al navegador)
+if (typeof module !== "undefined") {
+  module.exports = {
+    esCorreoValido, esRutValido, validarNombre, validarRut, validarCorreo,
+    validarTelefono, validarRegion, validarClave, validarConfirmacion, validarMensaje
+  };
 }
