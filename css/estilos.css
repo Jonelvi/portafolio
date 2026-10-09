@@ -249,11 +249,13 @@ body::before {
 @keyframes mover-cuadricula { to { background-position: 40px 40px; } }
 
 /* Entrada del inicio */
-.hero > * { animation: subir .7s ease-out both; }
-.hero > *:nth-child(2) { animation-delay: .15s; }
-.hero > *:nth-child(3) { animation-delay: .3s; }
-.hero > *:nth-child(4) { animation-delay: .45s; }
-.hero > *:nth-child(5) { animation-delay: .6s; }
+.hero-info > * { animation: subir .7s ease-out both; }
+.hero-info > *:nth-child(2) { animation-delay: .15s; }
+.hero-info > *:nth-child(3) { animation-delay: .3s; }
+.hero-info > *:nth-child(4) { animation-delay: .45s; }
+.hero-info > *:nth-child(5) { animation-delay: .6s; }
+.ventana-codigo { animation: subir .8s ease-out .5s both, flotar 6s ease-in-out 1.5s infinite; }
+@keyframes flotar { 50% { transform: translateY(-8px); } }
 @keyframes subir { from { opacity: 0; transform: translateY(24px); } }
 
 /* Nombre con brillo verde que pasa */
@@ -350,7 +352,92 @@ body::before {
 .confeti { position: fixed; inset: 0; pointer-events: none; z-index: 200; }
 
 /* Accesibilidad: si el usuario pidió menos movimiento, se desactiva todo */
+/* =========================================
+   VENTANA DE CÓDIGO (hero) Y REGLAS DE NEGOCIO
+   ========================================= */
+.hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 3rem; align-items: center; max-width: 1100px; }
+
+.ventana-codigo {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .45);
+}
+.ventana-barra {
+  display: flex; align-items: center; gap: 6px;
+  padding: .6rem .9rem;
+  border-bottom: 1px solid var(--borde);
+  font-family: var(--mono); font-size: .75rem; color: var(--texto-suave);
+}
+.ventana-barra span { width: 10px; height: 10px; border-radius: 50%; background: var(--borde); }
+.ventana-barra span:nth-child(3) { background: var(--acento); margin-right: .5rem; }
+.ventana-codigo pre { margin: 0; padding: 1.1rem 1.2rem; overflow-x: auto; }
+.ventana-codigo code { font-family: var(--mono); font-size: .82rem; line-height: 1.75; color: var(--texto); }
+
+/* Resaltado de sintaxis (colores tipo editor) */
+.c-kw  { color: #ff7b72; }
+.c-str { color: #a5d6ff; }
+.c-fn  { color: #d2a8ff; }
+.c-var { color: #ffa657; }
+.c-num { color: #79c0ff; }
+.c-com { color: #6e7681; font-style: italic; }
+
+code {
+  font-family: var(--mono);
+  font-size: .85em;
+  background: rgba(63, 185, 80, .1);
+  color: var(--acento);
+  padding: .1em .35em;
+  border-radius: 4px;
+}
+.ventana-codigo code { background: none; padding: 0; }
+
+.vista-descuento { font-family: var(--mono); font-size: .85rem; color: var(--acento); margin: -.3rem 0 1rem; min-height: 1em; }
+
+.tarjeta-socio {
+  margin-top: 1rem;
+  border: 1px dashed var(--acento);
+  border-radius: var(--radio);
+  padding: 1rem 1.2rem;
+  animation: entrar .4s ease;
+}
+.codigo-socio { font-family: var(--mono); font-size: 1.6rem; letter-spacing: .12em; color: #f0f6fc; margin: .2rem 0 .5rem; }
+
+.reglas {
+  border-left: 2px solid var(--acento);
+  padding: .5rem 0 .5rem 1.2rem;
+  margin: 2rem 0;
+}
+.reglas h2 { font-size: 1rem; }
+.reglas ol { list-style: none; display: grid; gap: .5rem; font-size: .9rem; color: var(--texto-suave); }
+.reglas strong { font-family: var(--mono); color: var(--acento); margin-right: .4rem; font-weight: 600; }
+
+.boton:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* Servicios */
+.estado-sesion {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+  border: 1px solid var(--borde); border-radius: var(--radio);
+  padding: .9rem 1.2rem; margin: 1rem 0 1.5rem;
+}
+.estado-sesion p { margin: 0; }
+.servicio .precio { font-family: var(--mono); font-size: 1.4rem; color: #f0f6fc; margin: .8rem 0 1.2rem; flex: 0; }
+.precio-original { font-size: .9rem; color: var(--texto-suave); text-decoration: line-through; }
+.precio-original:empty { display: none; }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: 1fr; gap: 2rem; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .nombre { color: #f0f6fc; background: none; }
 }
+
+/* Ajustes del hero con ventana de código */
+.hero { max-width: 960px; gap: 2.5rem; }
+.hero h1.nombre { font-size: clamp(2.2rem, 5vw, 3.2rem); white-space: nowrap; }
+.reglas code { white-space: nowrap; }
+.hero > * { min-width: 0; } /* evita que el código ensanche la columna en celular */
+@media (max-width: 640px) { .ventana-codigo code { font-size: .72rem; } }
