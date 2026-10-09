@@ -1,0 +1,12 @@
+{
+  "name": "portafolio-jonelvi-castro",
+  "version": "1.0.0",
+  "description": "Portafolio personal - DSY1104 Desarrollo Fullstack II",
+  "author": "Jonelvi Castro",
+  "scripts": {
+    "test": "jasmine --config=tests/jasmine.json"
+  },
+  "devDependencies": {
+    "jasmine": "^5.1.0"
+  }
+}
