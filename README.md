@@ -7,6 +7,7 @@ Portafolio personal hecho con **HTML5, CSS3 y JavaScript**, con estilo informát
 |---|---|
 | `index.html` | Presentación, sobre mí, stack de tecnologías y video embebido |
 | `proyectos.html` | Proyectos con filtro por categoría (botones JS) |
+| `servicios.html` | Servicios con precio de socio según las reglas de negocio |
 | `registro.html` | Registro con validaciones en JavaScript |
 | `login.html` | Ingreso con validaciones |
 | `contacto.html` | Contacto con validación y contador de caracteres |
@@ -17,12 +18,14 @@ portafolio/
 ├── *.html
 ├── css/estilos.css      ← única hoja de estilos externa
 ├── js/validaciones.js   ← validaciones de los 3 formularios
+├── js/reglas.js         ← reglas de negocio (RN-01 a RN-08)
+├── js/servicios.js      ← precios con descuento de socio
 ├── js/proyectos.js      ← filtro de proyectos
 ├── js/animaciones.js    ← escritura automática, aparición al scroll, barra de progreso
 ├── js/confeti.js        ← confeti al enviar un formulario correctamente
 ├── tests/
 │   ├── SpecRunner.html          ← abre en el navegador para ver las pruebas
-│   └── spec/validaciones.spec.js ← 24 pruebas unitarias (Jasmine)
+│   └── spec/                    ← 44 pruebas unitarias (Jasmine)
 └── img/
 ```
 
@@ -34,6 +37,21 @@ portafolio/
 - Región con sugerencias (`datalist`).
 - Contraseña de 8 a 16 caracteres, con una mayúscula y un número, y su confirmación.
 - Aceptar términos.
+
+## Reglas de negocio
+El proyecto no tiene backend, así que los usuarios se guardan en `localStorage` del navegador (simulación).
+Todos los códigos (promocionales y de socio) son **ficticios**.
+
+| Código | Regla | Dónde se aplica |
+|---|---|---|
+| RN-01 | Solo mayores de 18 años pueden registrarse | registro (fecha de nacimiento) |
+| RN-02 | Un correo solo puede registrarse una vez | registro |
+| RN-03 | Correos `@duoc.cl`, `@duocuc.cl` o `@profesor.duoc.cl` tienen 20% de descuento | registro / servicios |
+| RN-04 | Códigos promocionales `BIENVENIDA10` (10%) y `JCASTRO15` (15%) | registro |
+| RN-05 | Los descuentos no se acumulan: se aplica el mayor | registro / servicios |
+| RN-06 | Cada cuenta recibe un código de socio único, ej. `JC-7K4M-2Q9X` | registro / login |
+| RN-07 | 3 intentos fallidos de ingreso bloquean el login 30 segundos | login |
+| RN-08 | Los precios con descuento solo se ven con sesión iniciada | servicios |
 
 ## Animaciones
 - Texto que se escribe y borra solo en el inicio.
@@ -54,7 +72,7 @@ Se prueban las funciones de validación de `js/validaciones.js`.
   npm install
   npm test
   ```
-Resultado esperado: `24 specs, 0 failures`.
+Resultado esperado: `44 specs, 0 failures` (24 de validaciones + 20 de reglas de negocio).
 
 ### Casos de prueba manuales
 | # | Página | Acción | Resultado esperado |
@@ -69,6 +87,13 @@ Resultado esperado: `24 specs, 0 failures`.
 | 8 | contacto | Mensaje de 4 letras | "El mensaje debe tener al menos 10 caracteres" |
 | 9 | proyectos | Clic en "javascript" | Solo se ven 2 proyectos |
 | 10 | todas | Clic en cada link del menú y del footer | Navega a la página correcta |
+| 11 | registro | Fecha de nacimiento de alguien de 16 años | "Debes tener al menos 18 años" (RN-01) |
+| 12 | registro | Registrar dos veces el mismo correo | "Este correo ya está registrado" (RN-02) |
+| 13 | registro | Correo `@duocuc.cl` + código `JCASTRO15` | Muestra 20%, no 35% (RN-03 y RN-05) |
+| 14 | registro | Código `GRATIS100` | "El código promocional no existe" (RN-04) |
+| 15 | registro | Registro correcto | Aparece código de socio `XX-XXXX-XXXX` y confeti (RN-06) |
+| 16 | login | 3 contraseñas incorrectas | Botón bloqueado con cuenta regresiva de 30 s (RN-07) |
+| 17 | servicios | Entrar sin sesión y luego con sesión | Sin sesión: precio normal. Con sesión: precio tachado y precio de socio (RN-08) |
 
 ## Subir a GitHub
 ```bash
