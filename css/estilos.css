@@ -228,3 +228,129 @@ p { margin-bottom: .8rem; }
 }
 
 #contador-proyectos { margin-top: 1.25rem; }
+
+/* =========================================
+   ANIMACIONES
+   ========================================= */
+
+/* Fondo: cuadrícula sutil que se desplaza lentamente */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(63, 185, 80, .04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(63, 185, 80, .04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: mover-cuadricula 20s linear infinite;
+  pointer-events: none;
+}
+@keyframes mover-cuadricula { to { background-position: 40px 40px; } }
+
+/* Entrada del inicio */
+.hero > * { animation: subir .7s ease-out both; }
+.hero > *:nth-child(2) { animation-delay: .15s; }
+.hero > *:nth-child(3) { animation-delay: .3s; }
+.hero > *:nth-child(4) { animation-delay: .45s; }
+.hero > *:nth-child(5) { animation-delay: .6s; }
+@keyframes subir { from { opacity: 0; transform: translateY(24px); } }
+
+/* Nombre con brillo verde que pasa */
+.nombre {
+  background: linear-gradient(90deg, #f0f6fc 40%, var(--acento) 50%, #f0f6fc 60%);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: subir .7s ease-out .15s both, brillo 5s ease-in-out 1s infinite;
+}
+@keyframes brillo { 0% { background-position: 100% 0; } 60%, 100% { background-position: 0 0; } }
+
+.subtitulo { min-height: 1.7em; }
+.subtitulo .cursor { margin-left: 2px; }
+
+/* Aparecer al hacer scroll (clases que pone animaciones.js) */
+.revelar {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity .6s ease, transform .6s ease;
+  transition-delay: var(--retraso, 0ms);
+}
+.revelar.visible { opacity: 1; transform: none; }
+
+/* Barra de progreso de lectura */
+.barra-progreso {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0;
+  background: var(--acento);
+  box-shadow: 0 0 8px var(--acento);
+  z-index: 100;
+}
+
+/* Subrayado animado en el menú */
+.menu a { position: relative; }
+.menu a::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -4px;
+  height: 1px; width: 100%;
+  background: var(--acento);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .25s ease;
+}
+.menu a:hover::after, .menu a.activo::after { transform: scaleX(1); }
+
+/* Botones con brillo */
+.boton { transition: background .2s, color .2s, box-shadow .2s, transform .2s; }
+.boton:hover { box-shadow: 0 0 18px rgba(63, 185, 80, .35); transform: translateY(-2px); }
+.boton:active { transform: translateY(0) scale(.97); }
+
+/* Skills que se elevan */
+.skills li { transition: border-color .2s, transform .2s, color .2s; }
+.skills li:hover { border-color: var(--acento); color: var(--acento); transform: translateY(-3px); }
+
+/* Avatar con anillo pulsante */
+.avatar { animation: pulso 3s ease-in-out infinite; }
+@keyframes pulso {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(63, 185, 80, .4); }
+  50% { box-shadow: 0 0 0 10px rgba(63, 185, 80, 0); }
+}
+
+/* Tarjetas: luz que sigue al mouse */
+.tarjeta { position: relative; overflow: hidden; }
+.tarjeta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(220px circle at var(--x, 50%) var(--y, 50%), rgba(63, 185, 80, .12), transparent 70%);
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+}
+.tarjeta:hover::before { opacity: 1; }
+.tarjeta img { transition: transform .4s ease; }
+.tarjeta:hover img { transform: scale(1.04); }
+.tarjeta:not(.oculta) { animation: aparecer .4s ease both; }
+@keyframes aparecer { from { opacity: 0; transform: scale(.95); } }
+
+/* Formularios: sacudida en error y mensajes que entran */
+.sacudir { animation: sacudir .35s ease; }
+@keyframes sacudir {
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+.error:not(:empty), .exito:not(:empty) { animation: entrar .3s ease; }
+@keyframes entrar { from { opacity: 0; transform: translateY(-4px); } }
+
+/* Lienzo del confeti */
+.confeti { position: fixed; inset: 0; pointer-events: none; z-index: 200; }
+
+/* Accesibilidad: si el usuario pidió menos movimiento, se desactiva todo */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .nombre { color: #f0f6fc; background: none; }
+}
