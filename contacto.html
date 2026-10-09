@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portafolio de desarrollador web fullstack">
+  <title>Contacto | Tu Nombre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <header class="encabezado">
+    <a href="index.html" class="logo"><span class="prompt">&gt;</span> tu_nombre<span class="cursor">_</span></a>
+    <nav aria-label="Navegación principal">
+      <ul class="menu">
+        <li><a href="index.html">./inicio</a></li>
+        <li><a href="proyectos.html">./proyectos</a></li>
+        <li><a href="registro.html">./registro</a></li>
+        <li><a href="login.html">./login</a></li>
+        <li><a href="contacto.html" class="activo" aria-current="page">./contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="contenedor formulario-caja">
+      <h1><span class="num">$</span> contacto</h1>
+      <p class="comentario">// ¿tienes un proyecto o una pregunta? escríbeme</p>
+      <form id="form-contacto" novalidate>
+        <div class="campo">
+          <label for="contacto-nombre">nombre</label>
+          <input type="text" id="contacto-nombre" name="nombre" autocomplete="name">
+          <small class="error" id="error-contacto-nombre"></small>
+        </div>
+        <div class="campo">
+          <label for="contacto-correo">correo</label>
+          <input type="email" id="contacto-correo" name="correo" autocomplete="email">
+          <small class="error" id="error-contacto-correo"></small>
+        </div>
+        <div class="campo">
+          <label for="contacto-mensaje">mensaje</label>
+          <textarea id="contacto-mensaje" name="mensaje" rows="5" maxlength="500"></textarea>
+          <small class="ayuda"><span id="contador">0</span>/500 caracteres</small>
+          <small class="error" id="error-contacto-mensaje"></small>
+        </div>
+        <button type="submit" class="boton">enviar()</button>
+        <p id="mensaje-contacto" class="exito" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <p><span class="acento">$</span> echo "© 2026 Tu Nombre — Desarrollador Fullstack"</p>
+    <p>Santiago, Chile · <a href="mailto:tu.correo@duocuc.cl">tu.correo@duocuc.cl</a> · <a href="https://github.com/TU_USUARIO" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></p>
+    <p class="pie-links"><a href="index.html">inicio</a> · <a href="proyectos.html">proyectos</a> · <a href="registro.html">registro</a> · <a href="login.html">login</a> · <a href="contacto.html">contacto</a></p>
+  </footer>
+
+  <script src="js/validaciones.js"></script>
+</body>
+</html>

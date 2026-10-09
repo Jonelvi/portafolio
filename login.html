@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portafolio de desarrollador web fullstack">
+  <title>Ingresar | Tu Nombre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <header class="encabezado">
+    <a href="index.html" class="logo"><span class="prompt">&gt;</span> tu_nombre<span class="cursor">_</span></a>
+    <nav aria-label="Navegación principal">
+      <ul class="menu">
+        <li><a href="index.html">./inicio</a></li>
+        <li><a href="proyectos.html">./proyectos</a></li>
+        <li><a href="registro.html">./registro</a></li>
+        <li><a href="login.html" class="activo" aria-current="page">./login</a></li>
+        <li><a href="contacto.html">./contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="contenedor formulario-caja">
+      <h1><span class="num">$</span> login</h1>
+      <form id="form-login" novalidate>
+        <div class="campo">
+          <label for="login-correo">correo</label>
+          <input type="email" id="login-correo" name="correo" autocomplete="email" placeholder="usuario@duocuc.cl">
+          <small class="error" id="error-login-correo"></small>
+        </div>
+        <div class="campo">
+          <label for="login-clave">contraseña</label>
+          <input type="password" id="login-clave" name="clave" autocomplete="current-password">
+          <small class="error" id="error-login-clave"></small>
+        </div>
+        <button type="submit" class="boton">ingresar()</button>
+        <p id="mensaje-login" class="exito" aria-live="polite"></p>
+      </form>
+      <p>¿No tienes cuenta? <a href="registro.html">Regístrate</a></p>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <p><span class="acento">$</span> echo "© 2026 Tu Nombre — Desarrollador Fullstack"</p>
+    <p>Santiago, Chile · <a href="mailto:tu.correo@duocuc.cl">tu.correo@duocuc.cl</a> · <a href="https://github.com/TU_USUARIO" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></p>
+    <p class="pie-links"><a href="index.html">inicio</a> · <a href="proyectos.html">proyectos</a> · <a href="registro.html">registro</a> · <a href="login.html">login</a> · <a href="contacto.html">contacto</a></p>
+  </footer>
+
+  <script src="js/validaciones.js"></script>
+</body>
+</html>

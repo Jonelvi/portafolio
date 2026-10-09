@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portafolio de desarrollador web fullstack">
+  <title>Proyectos | Tu Nombre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <header class="encabezado">
+    <a href="index.html" class="logo"><span class="prompt">&gt;</span> tu_nombre<span class="cursor">_</span></a>
+    <nav aria-label="Navegación principal">
+      <ul class="menu">
+        <li><a href="index.html">./inicio</a></li>
+        <li><a href="proyectos.html" class="activo" aria-current="page">./proyectos</a></li>
+        <li><a href="registro.html">./registro</a></li>
+        <li><a href="login.html">./login</a></li>
+        <li><a href="contacto.html">./contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="contenedor">
+      <h1><span class="num">~/</span>proyectos</h1>
+      <p class="comentario">// filtra por categoría</p>
+      <div class="filtros" role="group" aria-label="Filtrar proyectos">
+        <button type="button" class="filtro activo" data-filtro="todos">todos</button>
+        <button type="button" class="filtro" data-filtro="web">web</button>
+        <button type="button" class="filtro" data-filtro="js">javascript</button>
+        <button type="button" class="filtro" data-filtro="db">base_de_datos</button>
+      </div>
+      <div class="grilla">
+        <article class="tarjeta" data-categoria="web">
+          <img src="img/proyecto-tienda.svg" alt="Vista previa del proyecto MiTienda">
+          <h2>MiTienda</h2>
+          <p>Tienda web con registro de usuarios y validación de formularios en JavaScript.</p>
+          <ul class="tags"><li>HTML</li><li>CSS</li><li>JS</li></ul>
+          <a href="https://github.com/TU_USUARIO" target="_blank" rel="noopener" class="enlace">ver código →</a>
+        </article>
+        <article class="tarjeta" data-categoria="web">
+          <img src="img/proyecto-landing.svg" alt="Vista previa del proyecto Landing Café">
+          <h2>Landing Café</h2>
+          <p>Página de aterrizaje responsiva para una cafetería local.</p>
+          <ul class="tags"><li>HTML</li><li>CSS</li></ul>
+          <a href="https://github.com/TU_USUARIO" target="_blank" rel="noopener" class="enlace">ver código →</a>
+        </article>
+        <article class="tarjeta" data-categoria="js">
+          <img src="img/proyecto-calc.svg" alt="Vista previa del proyecto Calculadora">
+          <h2>Calculadora</h2>
+          <p>Calculadora con historial de operaciones y modo teclado.</p>
+          <ul class="tags"><li>JS</li><li>CSS</li></ul>
+          <a href="https://github.com/TU_USUARIO" target="_blank" rel="noopener" class="enlace">ver código →</a>
+        </article>
+        <article class="tarjeta" data-categoria="js">
+          <img src="img/proyecto-todo.svg" alt="Vista previa del proyecto To-Do App">
+          <h2>To-Do App</h2>
+          <p>Lista de tareas que guarda los datos en el navegador.</p>
+          <ul class="tags"><li>JS</li><li>LocalStorage</li></ul>
+          <a href="https://github.com/TU_USUARIO" target="_blank" rel="noopener" class="enlace">ver código →</a>
+        </article>
+        <article class="tarjeta" data-categoria="db">
+          <img src="img/proyecto-db.svg" alt="Vista previa del proyecto Sistema Biblioteca">
+          <h2>Sistema Biblioteca</h2>
+          <p>Modelo de base de datos y consultas para préstamos de libros.</p>
+          <ul class="tags"><li>SQL</li></ul>
+          <a href="https://github.com/TU_USUARIO" target="_blank" rel="noopener" class="enlace">ver código →</a>
+        </article>
+      </div>
+      <p id="contador-proyectos" class="comentario" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <p><span class="acento">$</span> echo "© 2026 Tu Nombre — Desarrollador Fullstack"</p>
+    <p>Santiago, Chile · <a href="mailto:tu.correo@duocuc.cl">tu.correo@duocuc.cl</a> · <a href="https://github.com/TU_USUARIO" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></p>
+    <p class="pie-links"><a href="index.html">inicio</a> · <a href="proyectos.html">proyectos</a> · <a href="registro.html">registro</a> · <a href="login.html">login</a> · <a href="contacto.html">contacto</a></p>
+  </footer>
+
+  <script src="js/proyectos.js"></script>
+</body>
+</html>

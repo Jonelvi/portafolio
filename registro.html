@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portafolio de desarrollador web fullstack">
+  <title>Registro | Tu Nombre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <header class="encabezado">
+    <a href="index.html" class="logo"><span class="prompt">&gt;</span> tu_nombre<span class="cursor">_</span></a>
+    <nav aria-label="Navegación principal">
+      <ul class="menu">
+        <li><a href="index.html">./inicio</a></li>
+        <li><a href="proyectos.html">./proyectos</a></li>
+        <li><a href="registro.html" class="activo" aria-current="page">./registro</a></li>
+        <li><a href="login.html">./login</a></li>
+        <li><a href="contacto.html">./contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="contenedor formulario-caja">
+      <h1><span class="num">$</span> crear_cuenta</h1>
+      <p class="comentario">// regístrate para recibir novedades y acceder a mis recursos</p>
+
+      <form id="form-registro" novalidate>
+        <div class="campo">
+          <label for="nombre">nombre_completo</label>
+          <input type="text" id="nombre" name="nombre" autocomplete="name" placeholder="Juan Pérez">
+          <small class="error" id="error-nombre"></small>
+        </div>
+
+        <div class="campo">
+          <label for="rut">rut</label>
+          <input type="text" id="rut" name="rut" placeholder="12345678-5" maxlength="10">
+          <small class="ayuda">Sin puntos y con guion.</small>
+          <small class="error" id="error-rut"></small>
+        </div>
+
+        <div class="campo">
+          <label for="correo">correo</label>
+          <input type="email" id="correo" name="correo" autocomplete="email" placeholder="usuario@duocuc.cl">
+          <small class="error" id="error-correo"></small>
+        </div>
+
+        <div class="campo">
+          <label for="telefono">teléfono <span class="ayuda">(opcional)</span></label>
+          <input type="tel" id="telefono" name="telefono" autocomplete="tel" placeholder="+56912345678">
+          <small class="error" id="error-telefono"></small>
+        </div>
+
+        <div class="campo">
+          <label for="region">región</label>
+          <input type="text" id="region" name="region" list="lista-regiones" placeholder="Empieza a escribir...">
+          <datalist id="lista-regiones">
+            <option value="Arica y Parinacota">
+            <option value="Tarapacá">
+            <option value="Antofagasta">
+            <option value="Atacama">
+            <option value="Coquimbo">
+            <option value="Valparaíso">
+            <option value="Metropolitana de Santiago">
+            <option value="O'Higgins">
+            <option value="Maule">
+            <option value="Ñuble">
+            <option value="Biobío">
+            <option value="La Araucanía">
+            <option value="Los Ríos">
+            <option value="Los Lagos">
+            <option value="Aysén">
+            <option value="Magallanes">
+          </datalist>
+          <small class="error" id="error-region"></small>
+        </div>
+
+        <div class="campo">
+          <label for="clave">contraseña</label>
+          <input type="password" id="clave" name="clave" autocomplete="new-password">
+          <small class="ayuda">8 a 16 caracteres, una mayúscula y un número.</small>
+          <small class="error" id="error-clave"></small>
+        </div>
+
+        <div class="campo">
+          <label for="clave2">confirmar_contraseña</label>
+          <input type="password" id="clave2" name="clave2" autocomplete="new-password">
+          <small class="error" id="error-clave2"></small>
+        </div>
+
+        <div class="campo campo-check">
+          <input type="checkbox" id="terminos" name="terminos">
+          <label for="terminos">Acepto los términos y condiciones</label>
+          <small class="error" id="error-terminos"></small>
+        </div>
+
+        <div class="acciones">
+          <button type="submit" class="boton">registrar()</button>
+          <button type="reset" class="boton boton-borde">limpiar()</button>
+        </div>
+        <p id="mensaje-exito" class="exito" aria-live="polite"></p>
+      </form>
+      <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <p><span class="acento">$</span> echo "© 2026 Tu Nombre — Desarrollador Fullstack"</p>
+    <p>Santiago, Chile · <a href="mailto:tu.correo@duocuc.cl">tu.correo@duocuc.cl</a> · <a href="https://github.com/TU_USUARIO" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></p>
+    <p class="pie-links"><a href="index.html">inicio</a> · <a href="proyectos.html">proyectos</a> · <a href="registro.html">registro</a> · <a href="login.html">login</a> · <a href="contacto.html">contacto</a></p>
+  </footer>
+
+  <script src="js/validaciones.js"></script>
+</body>
+</html>
