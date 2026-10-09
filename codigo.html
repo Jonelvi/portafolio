@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portafolio de desarrollador web fullstack">
+  <title>Código | Jonelvi Castro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+
+  <header class="encabezado">
+    <a href="index.html" class="logo"><span class="prompt">&gt;</span> jonelvi_castro<span class="cursor">_</span></a>
+    <nav aria-label="Navegación principal">
+      <ul class="menu">
+        <li><a href="index.html">./inicio</a></li>
+        <li><a href="proyectos.html">./proyectos</a></li>
+        <li><a href="servicios.html">./servicios</a></li>
+        <li><a href="registro.html">./registro</a></li>
+        <li><a href="login.html">./login</a></li>
+        <li><a href="contacto.html">./contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="contenedor visor-pagina">
+      <a href="proyectos.html" class="volver">← volver a proyectos</a>
+      <h1><span class="num">~/</span><span id="titulo-proyecto">cargando...</span></h1>
+      <p id="descripcion-proyecto" class="comentario"></p>
+
+      <article id="visor" class="visor">
+        <div class="visor-barra">
+          <div id="pestanas" class="pestanas" role="tablist" aria-label="Archivos del proyecto"></div>
+          <button type="button" id="copiar" class="copiar">copiar</button>
+        </div>
+        <p id="ruta-archivo" class="ruta-archivo"></p>
+        <div class="visor-cuerpo">
+          <pre class="numeros" id="numeros" aria-hidden="true"></pre>
+          <pre class="codigo-pre"><code id="bloque-codigo"></code></pre>
+        </div>
+      </article>
+      <p class="comentario">// código de muestra con fines de portafolio</p>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <p><span class="acento">$</span> echo "© 2026 Jonelvi Castro — Desarrollador Fullstack"</p>
+    <p>Santiago, Chile · <a href="mailto:tu.correo@duocuc.cl">tu.correo@duocuc.cl</a> · <a href="https://github.com/TU_USUARIO" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></p>
+    <p class="pie-links"><a href="index.html">inicio</a> · <a href="proyectos.html">proyectos</a> · <a href="servicios.html">servicios</a> · <a href="registro.html">registro</a> · <a href="login.html">login</a> · <a href="contacto.html">contacto</a></p>
+  </footer>
+
+  <script src="js/animaciones.js"></script>
+  <script src="js/codigos.js"></script>
+  <script src="js/visor-codigo.js"></script>
+</body>
+</html>
