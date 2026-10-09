@@ -5,8 +5,9 @@ Portafolio personal hecho con **HTML5, CSS3 y JavaScript**, con estilo informát
 ## Páginas
 | Página | Contenido |
 |---|---|
-| `index.html` | Presentación, sobre mí, stack de tecnologías y video embebido |
+| `index.html` | Presentación, sobre mí, stack de tecnologías y video embebido ("HTML in 100 Seconds", Fireship) |
 | `proyectos.html` | Proyectos con filtro por categoría (botones JS) |
+| `codigo.html` | Visor del código de cada proyecto, con pestañas por archivo, números de línea y botón copiar |
 | `servicios.html` | Servicios con precio de socio según las reglas de negocio |
 | `registro.html` | Registro con validaciones en JavaScript |
 | `login.html` | Ingreso con validaciones |
@@ -21,6 +22,8 @@ portafolio/
 ├── js/reglas.js         ← reglas de negocio (RN-01 a RN-08)
 ├── js/servicios.js      ← precios con descuento de socio
 ├── js/proyectos.js      ← filtro de proyectos
+├── js/codigos.js        ← código de muestra de cada proyecto
+├── js/visor-codigo.js   ← lógica del visor (lee ?p=proyecto)
 ├── js/animaciones.js    ← escritura automática, aparición al scroll, barra de progreso
 ├── js/confeti.js        ← confeti al enviar un formulario correctamente
 ├── tests/
@@ -93,6 +96,8 @@ Resultado esperado: `44 specs, 0 failures` (24 de validaciones + 20 de reglas de
 | 14 | registro | Código `GRATIS100` | "El código promocional no existe" (RN-04) |
 | 15 | registro | Registro correcto | Aparece código de socio `XX-XXXX-XXXX` y confeti (RN-06) |
 | 16 | login | 3 contraseñas incorrectas | Botón bloqueado con cuenta regresiva de 30 s (RN-07) |
+| 18 | proyectos | Clic en "ver código" de MiTienda | Abre codigo.html con 3 pestañas sin salir del sitio |
+| 19 | codigo | Abrir `codigo.html?p=noexiste` | Muestra "proyecto_no_encontrado" |
 | 17 | servicios | Entrar sin sesión y luego con sesión | Sin sesión: precio normal. Con sesión: precio tachado y precio de socio (RN-08) |
 
 ## Subir a GitHub

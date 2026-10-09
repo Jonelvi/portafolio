@@ -441,3 +441,85 @@ code {
 .reglas code { white-space: nowrap; }
 .hero > * { min-width: 0; } /* evita que el código ensanche la columna en celular */
 @media (max-width: 640px) { .ventana-codigo code { font-size: .72rem; } }
+
+/* =========================================
+   VISOR DE CÓDIGO (codigo.html)
+   ========================================= */
+.volver { font-family: var(--mono); font-size: .85rem; display: inline-block; margin-bottom: 1.5rem; }
+
+.visor {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1.5rem 0 1rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+}
+
+.visor-barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  border-bottom: 1px solid var(--borde);
+  padding: 0 .75rem;
+  background: #0f141b;
+}
+
+.pestanas { display: flex; overflow-x: auto; }
+.pestana {
+  font-family: var(--mono);
+  font-size: .8rem;
+  background: transparent;
+  color: var(--texto-suave);
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: .8rem 1rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color .2s, border-color .2s;
+}
+.pestana:hover { color: var(--texto); }
+.pestana.activa { color: #f0f6fc; border-bottom-color: var(--acento); background: var(--superficie); }
+
+.copiar {
+  font-family: var(--mono);
+  font-size: .75rem;
+  background: transparent;
+  color: var(--texto-suave);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: .3rem .7rem;
+  margin-bottom: .55rem;
+  cursor: pointer;
+}
+.copiar:hover { color: var(--acento); border-color: var(--acento); }
+
+.ruta-archivo {
+  font-family: var(--mono);
+  font-size: .75rem;
+  color: var(--texto-suave);
+  padding: .6rem 1rem 0;
+  margin: 0;
+}
+
+.visor-cuerpo { display: flex; max-height: 70vh; overflow: auto; }
+.visor-cuerpo pre { margin: 0; padding: 1rem 0 1.25rem; font-family: var(--mono); font-size: .82rem; line-height: 1.7; }
+.numeros {
+  text-align: right;
+  color: #484f58;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  user-select: none;
+  border-right: 1px solid var(--borde);
+  position: sticky;
+  left: 0;
+  background: var(--superficie);
+}
+.codigo-pre { flex: 1; padding-left: 1rem !important; padding-right: 1rem !important; }
+.codigo-pre code,
+.codigo-pre code.hljs { background: none; padding: 0; color: var(--texto); font-size: inherit; white-space: pre; }
+
+@media (max-width: 640px) {
+  .visor-cuerpo pre { font-size: .72rem; }
+}
