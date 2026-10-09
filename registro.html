@@ -18,6 +18,7 @@
       <ul class="menu">
         <li><a href="index.html">./inicio</a></li>
         <li><a href="proyectos.html">./proyectos</a></li>
+        <li><a href="servicios.html">./servicios</a></li>
         <li><a href="registro.html" class="activo" aria-current="page">./registro</a></li>
         <li><a href="login.html">./login</a></li>
         <li><a href="contacto.html">./contacto</a></li>
@@ -48,6 +49,13 @@
           <label for="correo">correo</label>
           <input type="email" id="correo" name="correo" autocomplete="email" placeholder="usuario@duocuc.cl">
           <small class="error" id="error-correo"></small>
+        </div>
+
+        <div class="campo">
+          <label for="fecha">fecha_de_nacimiento</label>
+          <input type="date" id="fecha" name="fecha" autocomplete="bday">
+          <small class="ayuda">Debes ser mayor de 18 años (RN-01).</small>
+          <small class="error" id="error-fecha"></small>
         </div>
 
         <div class="campo">
@@ -93,6 +101,15 @@
           <small class="error" id="error-clave2"></small>
         </div>
 
+        <div class="campo">
+          <label for="codigo">código_promocional <span class="ayuda">(opcional)</span></label>
+          <input type="text" id="codigo" name="codigo" placeholder="BIENVENIDA10" autocomplete="off" spellcheck="false">
+          <small class="ayuda">Prueba con <code>BIENVENIDA10</code> o <code>JCASTRO15</code>.</small>
+          <small class="error" id="error-codigo"></small>
+        </div>
+
+        <p id="vista-descuento" class="vista-descuento" aria-live="polite"></p>
+
         <div class="campo campo-check">
           <input type="checkbox" id="terminos" name="terminos">
           <label for="terminos">Acepto los términos y condiciones</label>
@@ -104,7 +121,22 @@
           <button type="reset" class="boton boton-borde">limpiar()</button>
         </div>
         <p id="mensaje-exito" class="exito" aria-live="polite"></p>
+        <div id="tarjeta-socio" class="tarjeta-socio" hidden></div>
       </form>
+
+      <aside class="reglas">
+        <h2>reglas_de_negocio</h2>
+        <ol>
+          <li><strong>RN-01</strong> Solo mayores de 18 años pueden registrarse.</li>
+          <li><strong>RN-02</strong> Un correo solo puede registrarse una vez.</li>
+          <li><strong>RN-03</strong> Correos <code>@duoc.cl</code>, <code>@duocuc.cl</code> o <code>@profesor.duoc.cl</code> tienen 20% de descuento.</li>
+          <li><strong>RN-04</strong> Un código promocional válido da 10% o 15% de descuento.</li>
+          <li><strong>RN-05</strong> Los descuentos no se suman: se aplica el mayor.</li>
+          <li><strong>RN-06</strong> Cada cuenta recibe un código de socio único (formato <code>XX-XXXX-XXXX</code>).</li>
+          <li><strong>RN-07</strong> Tras 3 intentos fallidos de ingreso, la cuenta se bloquea 30 segundos.</li>
+          <li><strong>RN-08</strong> Los precios con descuento solo se muestran con la sesión iniciada.</li>
+        </ol>
+      </aside>
       <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
     </section>
   </main>
@@ -112,11 +144,12 @@
   <footer class="pie">
     <p><span class="acento">$</span> echo "© 2026 Jonelvi Castro — Desarrollador Fullstack"</p>
     <p>Santiago, Chile · <a href="mailto:tu.correo@duocuc.cl">tu.correo@duocuc.cl</a> · <a href="https://github.com/TU_USUARIO" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a></p>
-    <p class="pie-links"><a href="index.html">inicio</a> · <a href="proyectos.html">proyectos</a> · <a href="registro.html">registro</a> · <a href="login.html">login</a> · <a href="contacto.html">contacto</a></p>
+    <p class="pie-links"><a href="index.html">inicio</a> · <a href="proyectos.html">proyectos</a> · <a href="servicios.html">servicios</a> · <a href="registro.html">registro</a> · <a href="login.html">login</a> · <a href="contacto.html">contacto</a></p>
   </footer>
 
   <script src="js/animaciones.js"></script>
   <script src="js/confeti.js"></script>
+  <script src="js/reglas.js"></script>
   <script src="js/validaciones.js"></script>
 </body>
 </html>

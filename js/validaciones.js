@@ -113,79 +113,156 @@ function celebrar() {
   if (typeof lanzarConfeti === "function") lanzarConfeti();
 }
 
-// ===== REGISTRO =====
+// ===== REGISTRO (con reglas de negocio de js/reglas.js) =====
 const formRegistro = hayPagina ? document.getElementById("form-registro") : null;
 
 if (formRegistro) {
   const $ = id => document.getElementById(id);
   const regiones = Array.from(document.querySelectorAll("#lista-regiones option")).map(o => o.value);
 
+  // RN-02: además del formato, el correo no puede estar registrado
+  function validarCorreoNuevo(valor) {
+    const error = validarCorreo(valor);
+    if (error) return error;
+    if (correoYaRegistrado(valor, BD.usuarios())) return "Este correo ya está registrado. ¿Quieres iniciar sesión?";
+    return "";
+  }
+
   const validadores = {
     nombre:   () => aplicarResultado($("nombre"), "error-nombre", validarNombre($("nombre").value)),
     rut:      () => aplicarResultado($("rut"), "error-rut", validarRut($("rut").value)),
-    correo:   () => aplicarResultado($("correo"), "error-correo", validarCorreo($("correo").value)),
+    correo:   () => aplicarResultado($("correo"), "error-correo", validarCorreoNuevo($("correo").value)),
+    fecha:    () => aplicarResultado($("fecha"), "error-fecha", validarFechaNacimiento($("fecha").value)),
     telefono: () => aplicarResultado($("telefono"), "error-telefono", validarTelefono($("telefono").value)),
     region:   () => aplicarResultado($("region"), "error-region", validarRegion($("region").value, regiones)),
     clave:    () => aplicarResultado($("clave"), "error-clave", validarClave($("clave").value)),
     clave2:   () => aplicarResultado($("clave2"), "error-clave2", validarConfirmacion($("clave").value, $("clave2").value)),
+    codigo:   () => aplicarResultado($("codigo"), "error-codigo", validarCodigoPromo($("codigo").value)),
     terminos: () => aplicarResultado($("terminos"), "error-terminos",
                      $("terminos").checked ? "" : "Debes aceptar los términos y condiciones.")
   };
+
+  // RN-03 / RN-04 / RN-05: vista previa del descuento mientras se escribe
+  function mostrarDescuento() {
+    const correo = $("correo").value;
+    const codigo = $("codigo").value;
+    const porcentaje = calcularDescuento(correo, validarCodigoPromo(codigo) ? "" : codigo);
+    const vista = $("vista-descuento");
+    if (porcentaje === 0) { vista.textContent = ""; return; }
+    const motivo = esCorreoDuoc(correo) && porcentaje === DESCUENTO_DUOC ? "correo Duoc" : "código promocional";
+    vista.textContent = `Descuento de socio: ${porcentaje}% (${motivo})`;
+  }
 
   // Validación en tiempo real
   $("nombre").addEventListener("blur", validadores.nombre);
   $("rut").addEventListener("blur", validadores.rut);
   $("correo").addEventListener("blur", validadores.correo);
+  $("fecha").addEventListener("change", validadores.fecha);
   $("telefono").addEventListener("blur", validadores.telefono);
   $("region").addEventListener("change", validadores.region);
   $("clave").addEventListener("input", validadores.clave);
   $("clave2").addEventListener("input", validadores.clave2);
+  $("codigo").addEventListener("blur", validadores.codigo);
   $("terminos").addEventListener("change", validadores.terminos);
+  $("correo").addEventListener("input", mostrarDescuento);
+  $("codigo").addEventListener("input", mostrarDescuento);
 
   // Al enviar: si hay errores se BLOQUEA el envío
   formRegistro.addEventListener("submit", e => {
     e.preventDefault();
     const todoOk = Object.values(validadores).map(fn => fn()).every(Boolean);
-    const mensaje = $("mensaje-exito");
 
-    if (todoOk) {
-      formRegistro.reset(); // primero se limpia el formulario...
-      mensaje.textContent = "¡Registro exitoso! Ya eres parte de la comunidad."; // ...y luego se muestra el mensaje
-      celebrar();
-    } else {
-      mensaje.textContent = "";
+    if (!todoOk) {
+      $("mensaje-exito").textContent = "";
       formRegistro.querySelector(".invalido").focus();
+      return;
     }
+
+    // Se crea el usuario (simulado en localStorage)
+    const usuario = {
+      nombre: $("nombre").value.trim(),
+      correo: $("correo").value.trim().toLowerCase(),
+      clave: $("clave").value, // en un sistema real la contraseña se guardaría cifrada en el servidor
+      descuento: calcularDescuento($("correo").value, $("codigo").value),
+      codigoSocio: generarCodigoSocio($("nombre").value) // RN-06
+    };
+    BD.agregarUsuario(usuario);
+
+    formRegistro.reset(); // primero se limpia el formulario...
+    $("mensaje-exito").textContent = `¡Registro exitoso, ${usuario.nombre.split(" ")[0]}!`; // ...y luego el mensaje
+    const tarjeta = $("tarjeta-socio");
+    tarjeta.innerHTML = `
+      <p class="comentario">// tu código de socio</p>
+      <p class="codigo-socio">${usuario.codigoSocio}</p>
+      <p>Descuento: <strong>${usuario.descuento}%</strong> · <a href="login.html">Inicia sesión</a> para usarlo en <a href="servicios.html">servicios</a>.</p>`;
+    tarjeta.hidden = false;
+    celebrar();
   });
 
   formRegistro.addEventListener("reset", () => {
     limpiarEstados(formRegistro);
     $("mensaje-exito").textContent = "";
+    $("vista-descuento").textContent = "";
+    $("tarjeta-socio").hidden = true;
   });
 }
 
-// ===== LOGIN =====
+// ===== LOGIN (RN-07: bloqueo tras 3 intentos fallidos) =====
 const formLogin = hayPagina ? document.getElementById("form-login") : null;
 
 if (formLogin) {
   const correo = document.getElementById("login-correo");
   const clave = document.getElementById("login-clave");
+  const boton = document.getElementById("btn-login");
+  const salida = document.getElementById("mensaje-login");
+  const aviso = document.getElementById("aviso-login");
+  let temporizador = null;
+
+  // Muestra la cuenta regresiva y desactiva el botón mientras dure el bloqueo
+  function revisarBloqueo() {
+    const segundos = segundosDeBloqueo(BD.estadoLogin());
+    boton.disabled = segundos > 0;
+    if (segundos > 0) {
+      aviso.textContent = `Demasiados intentos. Espera ${segundos} s para volver a intentar.`;
+      clearTimeout(temporizador);
+      temporizador = setTimeout(revisarBloqueo, 1000);
+    } else if (aviso.textContent.startsWith("Demasiados")) {
+      aviso.textContent = "";
+    }
+    return segundos > 0;
+  }
+  revisarBloqueo();
 
   formLogin.addEventListener("submit", e => {
     e.preventDefault();
+    if (revisarBloqueo()) return;
+
     const okCorreo = aplicarResultado(correo, "error-login-correo",
       correo.value.trim() === "" ? "Ingresa tu correo." : validarCorreo(correo.value));
     const okClave = aplicarResultado(clave, "error-login-clave",
-      clave.value === "" ? "Ingresa tu contraseña." :
-      clave.value.length < 8 ? "La contraseña tiene al menos 8 caracteres." : "");
+      clave.value === "" ? "Ingresa tu contraseña." : "");
+    salida.textContent = "";
+    if (!okCorreo || !okClave) return;
 
-    const salida = document.getElementById("mensaje-login");
-    if (okCorreo && okClave) {
-      salida.textContent = "Ingreso correcto. ¡Hola de nuevo!";
-      celebrar();
-    } else {
-      salida.textContent = "";
+    const usuario = BD.buscar(correo.value);
+    if (!usuario || usuario.clave !== clave.value) {
+      // Mensaje genérico: no se revela si el correo existe (buena práctica de seguridad)
+      const estado = registrarIntentoFallido(BD.estadoLogin());
+      BD.guardarEstadoLogin(estado);
+      if (!revisarBloqueo()) {
+        const quedan = MAX_INTENTOS - estado.intentos;
+        aviso.textContent = `Correo o contraseña incorrectos. Te quedan ${quedan} intento${quedan === 1 ? "" : "s"}.`;
+      }
+      return;
     }
+
+    BD.guardarEstadoLogin({ intentos: 0, bloqueadoHasta: 0 });
+    BD.iniciarSesion(usuario.correo);
+    aviso.textContent = "";
+    salida.innerHTML = `¡Hola, ${usuario.nombre.split(" ")[0]}! Socio <code>${usuario.codigoSocio}</code>. ` +
+                       `<a href="servicios.html">Ver mis precios →</a>`;
+    formLogin.reset();
+    celebrar();
   });
 }
 
