@@ -5,7 +5,7 @@ Portafolio personal hecho con **HTML5, CSS3 y JavaScript**, con estilo informát
 ## Páginas
 | Página | Contenido |
 |---|---|
-| `index.html` | Presentación, sobre mí, stack de tecnologías y video embebido ("HTML in 100 Seconds", Fireship) |
+| `index.html` | Presentación, sobre mí, stack de tecnologías y video embebido ("Loser", Tame Impala) |
 | `proyectos.html` | Proyectos con filtro por categoría (botones JS) |
 | `codigo.html` | Visor del código de cada proyecto, con pestañas por archivo, números de línea y botón copiar |
 | `servicios.html` | Servicios con precio de socio según las reglas de negocio |
